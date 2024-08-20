@@ -1,0 +1,13 @@
+level,term,group,estimate,se
+country_name,(Intercept),Bulgaria,-1.332680395342265,0.05681444476476407
+country_name,(Intercept),Central African Republic,-0.4531721976170471,0.05598030188593881
+country_name,(Intercept),China,-0.18422664587820262,0.027705302602643728
+country_name,(Intercept),Cote d'Ivoire,-0.32850691918659863,0.055924120188575864
+country_name,(Intercept),Cyprus,0.6014034144661425,0.08085513522388008
+country_name,(Intercept),"Hong Kong SAR, China",-0.638629986641011,0.06594689413898223
+country_name,(Intercept),Malawi,1.0640778468108774,0.055812262388058365
+country_name,(Intercept),Slovak Republic,0.2069565562798731,0.056149868380503294
+country_name,(Intercept),Slovenia,-0.08676904274624964,0.07929110785251364
+country_name,(Intercept),Sri Lanka,-0.43908542545196344,0.056962066297945646
+country_name,(Intercept),Switzerland,1.0592510099539008,0.05684387725409554
+country_name,(Intercept),Vietnam,0.5313817852522058,0.05956001135528464

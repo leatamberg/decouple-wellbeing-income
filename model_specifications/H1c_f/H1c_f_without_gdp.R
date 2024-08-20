@@ -1,0 +1,22 @@
+source("scripts_cluster/fitting_function.R")
+
+run_model_fit(predictors = c("food",
+                             "housing",
+                             "health",
+                             "water",
+                             "air",
+                             "healthcare",
+                             "security",
+                             "social_support",
+                             "respect",
+                             "education",
+                             "interesting_activity",
+                             "recreation",
+                             "occupation",
+                             "freedom",
+                             "personal_income",
+                             "relative_income",
+                             "growth"), 
+              data_file_path = "C:/Users/ltamberg/OneDrive - Université de Lausanne/PhD/Determinants wellbeing/data/Gallup World Poll/data_all.csv",
+              suffix_output_files = "without_gdp",
+              cluster_robust_vcov = FALSE)
