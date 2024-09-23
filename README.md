@@ -12,7 +12,7 @@ Lea A. Tamberg (1*), Julia K. Steinberger (1), Viktoria Cologna (2), Vivien Fisc
 Understanding the link between well-being and income is crucial for assessing the viability of degrowth sustainability strategies. Here, we examine the extent to which the satisfaction of basic human needs can explain the correlation between income and life evaluation, an indicator of subjective well-being.
 Using more than 1.3 million responses from the Gallup World Poll, we estimate the effect of absolute and relative income,
 GDP per capita, and GDP growth on life evaluation while controlling for individual and country level need satisfaction and governance quality. 
-We find that need satisfaction allows for life evaluation comparable to that in the happiest countries of the world already at a GDP of \$\,10,000 per capita, an income compatible with successful need satisfaction. 
+We find that need satisfaction allows for life evaluation comparable to that in the happiest countries of the world already at a GDP of $10,000 per capita, an income compatible with successful need satisfaction. 
 The remaining effects of absolute income are marginal beyond this point.
 Our results suggest that basic human needs play a central role in decoupling subjective well-being from economic growth.
 
