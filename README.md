@@ -1,4 +1,4 @@
-# Decoupling well-being from income requires human need satisfaction
+# Human need satisfaction enables decoupling of well-being from income
 
 Lea A. Tamberg (1*), Julia K. Steinberger (1), Viktoria Cologna (2), Vivien Fisch-Romito (1), Joel Millward-Hopkins (1), Flavio Calvo (3), Naomi Oreskes (2)
 
@@ -9,12 +9,7 @@ Lea A. Tamberg (1*), Julia K. Steinberger (1), Viktoria Cologna (2), Vivien Fisc
 (*) Corresponding author. E-mail: lea.tamberg@unil.ch
  
 ## Abstract
-Understanding the link between well-being and income is crucial for assessing the viability of degrowth sustainability strategies. Here, we examine the extent to which the satisfaction of basic human needs can explain the correlation between income and life evaluation, an indicator of subjective well-being.
-Using more than 1.3 million responses from the Gallup World Poll, we estimate the effect of absolute and relative income,
-GDP per capita, and GDP growth on life evaluation while controlling for individual and country level need satisfaction and governance quality. 
-We find that need satisfaction allows for life evaluation comparable to that in the happiest countries of the world already at a GDP of $10,000 per capita, an income compatible with successful need satisfaction. 
-The remaining effects of absolute income are marginal beyond this point.
-Our results suggest that basic human needs play a central role in decoupling subjective well-being from economic growth.
+Understanding the link between well-being and income is crucial for assessing the viability of sustainability strategies that limit affluence. Here, we examine the extent to which the satisfaction of basic human needs can explain the correlation between income and life evaluation, an indicator of subjective well-being. Using more than 1.3 million responses from the Gallup World Poll, we estimate the effect of absolute and relative income, GDP per capita, and GDP growth on life evaluation, while controlling for individual and country-level need satisfaction, and governance quality. We find that a hypothetical country achieving population-wide need satisfaction would, even at a GDP per capita of $10,000, match today’s happiest countries in terms of life evaluation. Beyond this income level, the remaining effects of absolute income are marginal. Our results suggest that basic human needs play a central role in decoupling subjective well-being from economic growth.
 
  ## Contents of this repository
 * the publically available [datasets](public_data)
