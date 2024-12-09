@@ -90,9 +90,9 @@ data_subsample <- data_all %>% group_by(country_year) %>% slice_sample(n=1) %>% 
 
 # B1
 ```{r}
-model_B1 <- readRDS("path-to-fitted-models/B1/model.rds")
+model_B1 <- readRDS("./model_specifications/B1/model.rds")
 
-vcov_B1 <- readRDS("path-to-fitted-models/B1/vcov.rds")
+vcov_B1 <- readRDS("./model_specifications/B1/vcov.rds")
 
 model_B1@vcov_beta <- as.matrix(vcov_B1)
 
@@ -113,9 +113,9 @@ coef_model_B1 <- summary(model_B1, ddf="Satterthwaite")$coefficients[,"Estimate"
 
 # B2
 ```{r}
-model_B2 <- readRDS("path-to-fitted-models/B2/model.rds")
+model_B2 <- readRDS("./model_specifications/B2/model.rds")
 
-vcov_B2 <- readRDS("path-to-fitted-models/B2/vcov.rds")
+vcov_B2 <- readRDS("./model_specifications/B2/vcov.rds")
 
 model_B2@vcov_beta <- as.matrix(vcov_B2)
 
@@ -141,9 +141,9 @@ coef_model_B2 <- summary(model_B2, ddf="Satterthwaite")$coefficients[,"Estimate"
 ### B2 on H1k_n data / Model 1
 
 ```{r}
-model_B2_data_H1k_n <- readRDS("path-to-fitted-models/B2_data_H1k-n/model.rds")
+model_B2_data_H1k_n <- readRDS("./model_specifications/B2_data_H1k-n/model.rds")
 
-vcov_B2_data_H1k_n <- readRDS("path-to-fitted-models/B2_data_H1k-n/vcov.rds")
+vcov_B2_data_H1k_n <- readRDS("./model_specifications/B2_data_H1k-n/vcov.rds")
 
 model_B2_data_H1k_n@vcov_beta <- as.matrix(vcov_B2_data_H1k_n)
 
@@ -163,9 +163,9 @@ summary(model_B2_data_H1k_n)
 ## H1a
 
 ```{r}
-model_H1a <- readRDS("path-to-fitted-models/H1a/model.rds")
+model_H1a <- readRDS("./model_specifications/H1a/model.rds")
 
-vcov_H1a <- readRDS("path-to-fitted-models/H1a/vcov.rds")
+vcov_H1a <- readRDS("./model_specifications/H1a/vcov.rds")
 
 model_H1a@vcov_beta <- as.matrix(vcov_H1a) #replace vcov by cluster robust version
 ```
@@ -184,59 +184,14 @@ coef_model_H1a <- summary(model_H1a, ddf="Satterthwaite")$coefficients[,"Estimat
 ```
 
 
-```{r}
 
-# not yet switched to Satterthwaite!
-
-stargazer_detail <- 
-  function(
-    model, 
-    vcov, 
-    hypothesis_name, 
-    order = paste0("^",c("Constant", "gendermale", "age", "age_squared", "relationship_statuspartnered", "relationship_statusseparated",
-                    "relationship_statuswidowed", "food1", "housing1", "health1", "water1", "air1",
-                    "healthcare1", "security1", "social_support1", "respect1", "education1",
-                    "interesting_activity1", "recreation1", "occupation1", "freedom1", "personal_income", "relative_income", "gdp", "growth"), "$"),
-    covariate.labels = NULL){
- 
-
-  stargazer(model, 
-          report = 'vcs*', 
-          omit = c("year*"),
-          se = list(sqrt(diag(vcov))), 
-          intercept.bottom = FALSE, 
-          align = TRUE, 
-          single.row = TRUE,
-          no.space = TRUE,
-          title = paste("Model details for", hypothesis_name),
-          dep.var.caption = "",
-          dep.var.labels.include = FALSE,
-          order = order,
-          covariate.labels = covariate.labels,
-          keep.stat = c("n", "ser"),
-          add.lines = list(c("Residual standard deviation", signif(sigma(model),4)),
-                            c("Marginal Pseudo-$R^2$", signif(MuMIn::r.squaredGLMM(model)[[1,"R2m"]],4)),
-                            c("Conditional Pseudo-$R^2$", signif(MuMIn::r.squaredGLMM(model)[[1,"R2c"]],4))),
-          star.char = c("+","*","**","***"),
-          star.cutoffs =c(0.1, 0.05, 0.01, 0.001), 
-          notes = c("$+$ p$<$0.1; $^*$ p$<$0.05; $^{**}$ p$<$0.01; $^{***}$ p$<$0.001"),
-          notes.append = F,
-          label = "tab:RQ1")
-}
-
-
-stargazer_detail(model_H1a, vcov_H1a, "H1-a",
-                 covariate.labels = c("Intercept", "Male", "Age", "Age (squared)", "Partnered", "Separated", "Widowed", "Food", "Housing", "Health", 
-                       "Water", "Air", "Healthcare", "Security", "Social support", "Respect", 
-                       "Education", "Interesting activity", "Recreation", "Occupation", "Freedom","Log(GDP)"))
-```
 
 
 ## H1b
 ```{r}
-model_H1b <- readRDS("path-to-fitted-models/H1b/model.rds")
+model_H1b <- readRDS("./model_specifications/H1b/model.rds")
 
-vcov_H1b <- readRDS("path-to-fitted-models/H1b/vcov.rds")
+vcov_H1b <- readRDS("./model_specifications/H1b/vcov.rds")
 
 
 
@@ -294,9 +249,9 @@ data_all$country_average_social_support %>% max(na.rm = TRUE)
 
 ## H1c-f 
 ```{r}
-model_H1c_f <- readRDS("path-to-fitted-models/H1c_f/model.rds")
+model_H1c_f <- readRDS("./model_specifications/H1c_f/model.rds")
 
-vcov_H1c_f <- readRDS("path-to-fitted-models/H1c_f/vcov.rds")
+vcov_H1c_f <- readRDS("./model_specifications/H1c_f/vcov.rds")
 
 
 
@@ -321,9 +276,9 @@ random_effects_H1c_f <- ranef(model_H1c_f)
 ### H1c-f on on H1k_n data (Model 2)
 
 ```{r}
-model_H1c_f_data_H1k_n <- readRDS("path-to-fitted-models/H1c_f_data_H1k-n/model.rds")
+model_H1c_f_data_H1k_n <- readRDS("./model_specifications/H1c_f_data_H1k-n/model.rds")
 
-vcov_H1c_f_data_H1k_n <- readRDS("path-to-fitted-models/H1c_f_data_H1k-n/vcov.rds")
+vcov_H1c_f_data_H1k_n <- readRDS("./model_specifications/H1c_f_data_H1k-n/vcov.rds")
 
 
 
@@ -342,9 +297,9 @@ summary(model_H1c_f_data_H1k_n)
 
 ## H1g_j
 ```{r}
-model_H1g_j <- readRDS("path-to-fitted-models/H1g_j/model.rds")
+model_H1g_j <- readRDS("./model_specifications/H1g_j/model.rds")
 
-vcov_H1g_j <- readRDS("path-to-fitted-models/H1g_j/vcov.rds")
+vcov_H1g_j <- readRDS("./model_specifications/H1g_j/vcov.rds")
 
 
 
@@ -364,9 +319,9 @@ coef_model_H1g_j <- summary(model_H1g_j, ddf="Satterthwaite")$coefficients[,"Est
 
 ## H1k_n (Model 3)
 ```{r}
-model_H1k_n <- readRDS("path-to-fitted-models/H1k_n/model.rds")
+model_H1k_n <- readRDS("./model_specifications/H1k_n/model.rds")
 
-vcov_H1k_n <- readRDS("path-to-fitted-models/H1k_n/vcov.rds")
+vcov_H1k_n <- readRDS("./model_specifications/H1k_n/vcov.rds")
 
 
 
@@ -687,11 +642,11 @@ stargazer(models,
 ## F-tests
 
 ```{r}
-model_B1_ML <- readRDS("path-to-fitted-models/H1_ML/modelB1.rds")
-model_B2_ML <- readRDS("path-to-fitted-models/H1_ML/modelB2.rds")
-model_H1c_f_ML <- readRDS("path-to-fitted-models/H1_ML/modelH1c_f.rds")
-model_H1g_j_ML <- readRDS("path-to-fitted-models/H1_ML/modelH1g_j.rds")
-model_H1k_n_ML <- readRDS("path-to-fitted-models/H1_ML/modelH1k_n.rds")
+model_B1_ML <- readRDS("./model_specifications/H1_ML/modelB1.rds")
+model_B2_ML <- readRDS("./model_specifications/H1_ML/modelB2.rds")
+model_H1c_f_ML <- readRDS("./model_specifications/H1_ML/modelH1c_f.rds")
+model_H1g_j_ML <- readRDS("./model_specifications/H1_ML/modelH1g_j.rds")
+model_H1k_n_ML <- readRDS("./model_specifications/H1_ML/modelH1k_n.rds")
 
 ```
 
@@ -1202,12 +1157,12 @@ summary(lm(gdp_log ~ median_income_log,
 
 ## H2a
 ```{r}
-model_H2a <- readRDS("path-to-fitted-models/H2a/model.rds")
+model_H2a <- readRDS("./model_specifications/H2a/model.rds")
 
 
 
 
-vcov_H2a <- readRDS("path-to-fitted-models/H2a/vcov.rds")
+vcov_H2a <- readRDS("./model_specifications/H2a/vcov.rds")
 
 model_H2a@vcov_beta <- as.matrix(vcov_H2a) #replace vcov by cluster robust version
 
@@ -1279,12 +1234,12 @@ Interpretation: For income, relative income, and GDP, there is no relative inter
 
 ## H2b
 ```{r}
-model_H2b <- readRDS("path-to-fitted-models/H2b/model.rds")
+model_H2b <- readRDS("./model_specifications/H2b/model.rds")
 
 
 
 
-vcov_H2b <- readRDS("path-to-fitted-models/H2b/vcov.rds")
+vcov_H2b <- readRDS("./model_specifications/H2b/vcov.rds")
 
 model_H2b@vcov_beta <- as.matrix(vcov_H2b) #replace vcov by cluster robust version
 
@@ -1350,12 +1305,12 @@ ggintplot(model_H2b, varnames = c("relative_income", "government_effectiveness")
 
 ## H2c
 ```{r}
-model_H2c <- readRDS("path-to-fitted-models/H2c/model.rds")
+model_H2c <- readRDS("./model_specifications/H2c/model.rds")
 
 
 
 
-vcov_H2c <- readRDS("path-to-fitted-models/H2c/vcov.rds")
+vcov_H2c <- readRDS("./model_specifications/H2c/vcov.rds")
 
 model_H2c@vcov_beta <- as.matrix(vcov_H2c) #replace vcov by cluster robust version
 
@@ -1407,12 +1362,12 @@ ggintplot(obj = model_H2c_lme4, varnames = c("growth", "democracy"),
 
 ## H2d
 ```{r}
-model_H2d <- readRDS("path-to-fitted-models/H2d/model.rds")
+model_H2d <- readRDS("./model_specifications/H2d/model.rds")
 
 
 
 
-vcov_H2d <- readRDS("path-to-fitted-models/H2d/vcov.rds")
+vcov_H2d <- readRDS("./model_specifications/H2d/vcov.rds")
 
 model_H2d@vcov_beta <- as.matrix(vcov_H2d) #replace vcov by cluster robust version
 
@@ -1466,9 +1421,9 @@ ggintplot(obj = model_H2d, varnames = c("relative_income", "importance_rich"),
 ## H3
 
 ```{r}
-model_H3 <- readRDS("path-to-fitted-models/H3/model.rds")
+model_H3 <- readRDS("./model_specifications/H3/model.rds")
 
-vcov_H3 <- readRDS("path-to-fitted-models/H3/vcov.rds")
+vcov_H3 <- readRDS("./model_specifications/H3/vcov.rds")
 
 
 
@@ -1778,13 +1733,13 @@ cor(data_all$rating_economic_conditions, data_all$expected_economic_conditions, 
 
 ## H4a1
 ```{r}
-model_H4a1_med <- readRDS("path-to-fitted-models/H4a1/modelmed.rds")
+model_H4a1_med <- readRDS("./model_specifications/H4a1/modelmed.rds")
 
-vcov_H4a1_med <- readRDS("path-to-fitted-models/H4a1/vcovmed.rds")
+vcov_H4a1_med <- readRDS("./model_specifications/H4a1/vcovmed.rds")
 
-model_H4a1_out <- readRDS("path-to-fitted-models/H4a1/modelout.rds")
+model_H4a1_out <- readRDS("./model_specifications/H4a1/modelout.rds")
 
-vcov_H4a1_out <- readRDS("path-to-fitted-models/H4a1/vcovout.rds")
+vcov_H4a1_out <- readRDS("./model_specifications/H4a1/vcovout.rds")
 
 
 ```
@@ -1805,24 +1760,24 @@ summary(model_H4a1_out)
 
 ## H4a2
 ```{r}
-model_H4a2_med <- readRDS("path-to-fitted-models/H4a2/modelmed.rds")
+model_H4a2_med <- readRDS("./model_specifications/H4a2/modelmed.rds")
 
-vcov_H4a2_med <- readRDS("path-to-fitted-models/H4a2/vcovmed.rds")
+vcov_H4a2_med <- readRDS("./model_specifications/H4a2/vcovmed.rds")
 
-model_H4a2_out <- readRDS("path-to-fitted-models/H4a2/modelout.rds")
+model_H4a2_out <- readRDS("./model_specifications/H4a2/modelout.rds")
 
-vcov_H4a2_out <- readRDS("path-to-fitted-models/H4a2/vcovout.rds")
+vcov_H4a2_out <- readRDS("./model_specifications/H4a2/vcovout.rds")
 ```
 
 ## H4b
 ```{r}
-model_H4b_med <- readRDS("path-to-fitted-models/H4b/modelmed.rds")
+model_H4b_med <- readRDS("./model_specifications/H4b/modelmed.rds")
 
-vcov_H4b_med <- readRDS("path-to-fitted-models/H4b/vcovmed.rds")
+vcov_H4b_med <- readRDS("./model_specifications/H4b/vcovmed.rds")
 
-model_H4b_out <- readRDS("path-to-fitted-models/H4b/modelout.rds")
+model_H4b_out <- readRDS("./model_specifications/H4b/modelout.rds")
 
-vcov_H4b_out <- readRDS("path-to-fitted-models/H4b/vcovout.rds")
+vcov_H4b_out <- readRDS("./model_specifications/H4b/vcovout.rds")
 ```
 
 ```{r}
@@ -1847,13 +1802,13 @@ sobel_test("Hypothesis" = "H4-b", "model_med" = model_H4b_med, "vcov_med" = vcov
 
 ## H4c_d
 ```{r}
-model_H4c_d_med <- readRDS("path-to-fitted-models/H4c_d/modelmed.rds")
+model_H4c_d_med <- readRDS("./model_specifications/H4c_d/modelmed.rds")
 
-vcov_H4c_d_med <- readRDS("path-to-fitted-models/H4c_d/vcovmed.rds")
+vcov_H4c_d_med <- readRDS("./model_specifications/H4c_d/vcovmed.rds")
 
-model_H4c_d_out <- readRDS("path-to-fitted-models/H4c_d/modelout.rds")
+model_H4c_d_out <- readRDS("./model_specifications/H4c_d/modelout.rds")
 
-vcov_H4c_d_out <- readRDS("path-to-fitted-models/H4c_d/vcovout.rds")
+vcov_H4c_d_out <- readRDS("./model_specifications/H4c_d/vcovout.rds")
 ```
 
 ```{r}
@@ -1901,7 +1856,7 @@ stargazer(mediation_results, #type = "text",
 
 ## Logistic regressions
 ```{r}
-models_needs <- readRDS("path-to-fitted-models/Exp_needs_as_outcomes/models_needs.rds")
+models_needs <- readRDS("./model_specifications/Exp_needs_as_outcomes/models_needs.rds")
 ```
 
 ```{r}
@@ -2091,17 +2046,17 @@ data_all %>% select(life_satisfaction) %>% drop_na() %>% summarise(n())
 ```
 ## B2
 ```{r}
-model_Exp_ls_B2 <- readRDS("path-to-fitted-models/Exp_ls_B2/model.rds")
+model_Exp_ls_B2 <- readRDS("./model_specifications/Exp_ls_B2/model.rds")
 
-vcov_Exp_ls_B2 <- readRDS("path-to-fitted-models/Exp_ls_B2/vcov.rds")
+vcov_Exp_ls_B2 <- readRDS("./model_specifications/Exp_ls_B2/vcov.rds")
 
 model_Exp_ls_B2@vcov_beta <- as.matrix(vcov_Exp_ls_B2) #replace vcov by cluster robust version
 
 
 
-model_Exp_le_B2 <- readRDS("path-to-fitted-models/Exp_le_data_ls_B2/model.rds")
+model_Exp_le_B2 <- readRDS("./model_specifications/Exp_le_data_ls_B2/model.rds")
 
-vcov_Exp_le_B2 <- readRDS("path-to-fitted-models/Exp_le_data_ls_B2/vcov.rds")
+vcov_Exp_le_B2 <- readRDS("./model_specifications/Exp_le_data_ls_B2/vcov.rds")
 
 model_Exp_le_B2@vcov_beta <- as.matrix(vcov_Exp_le_B2)
 
@@ -2168,18 +2123,18 @@ stargazer(model_Exp_le_B2_lme4, model_Exp_ls_B2_lme4,
 
 
 ```{r}
-model_Exp_ls_H1c_f <- readRDS("path-to-fitted-models/Exp_ls_H1c_f/model.rds")
+model_Exp_ls_H1c_f <- readRDS("./model_specifications/Exp_ls_H1c_f/model.rds")
 
-vcov_Exp_ls_H1c_f <- readRDS("path-to-fitted-models/Exp_ls_H1c_f/vcov.rds")
+vcov_Exp_ls_H1c_f <- readRDS("./model_specifications/Exp_ls_H1c_f/vcov.rds")
 
 model_Exp_ls_H1c_f@vcov_beta <- as.matrix(vcov_Exp_ls_H1c_f) #replace vcov by cluster robust version
 
 
 
 
-model_Exp_le_H1c_f <- readRDS("path-to-fitted-models/Exp_le_data_ls_H1c_f/model.rds")
+model_Exp_le_H1c_f <- readRDS("./model_specifications/Exp_le_data_ls_H1c_f/model.rds")
 
-vcov_Exp_le_H1c_f <- readRDS("path-to-fitted-models/Exp_le_data_ls_H1c_f/vcov.rds")
+vcov_Exp_le_H1c_f <- readRDS("./model_specifications/Exp_le_data_ls_H1c_f/vcov.rds")
 
 model_Exp_le_H1c_f@vcov_beta <- as.matrix(vcov_Exp_le_H1c_f)
 
@@ -2254,9 +2209,9 @@ stargazer(model_Exp_le_H1c_f_lme4, model_Exp_ls_H1c_f_lme4,
 ### H1a
 
 ```{r}
-vcov_Exp_obj_H1a <- readRDS("path-to-fitted-models/Exp_obj_H1a/vcov.rds")
+vcov_Exp_obj_H1a <- readRDS("./model_specifications/Exp_obj_H1a/vcov.rds")
 
-model_Exp_obj_H1a <- readRDS("path-to-fitted-models/Exp_obj_H1a/model.rds")
+model_Exp_obj_H1a <- readRDS("./model_specifications/Exp_obj_H1a/model.rds")
 
 model_Exp_obj_H1a@vcov_beta <- as.matrix(vcov_Exp_obj_H1a) #replace vcov by cluster robust version
 
@@ -2280,9 +2235,9 @@ coef_model_Exp_obj_H1a <- summary(model_Exp_obj_H1a, ddf="Satterthwaite")$coeffi
 ### H1b
 ```{r}
 
-vcov_Exp_obj_H1b <- readRDS("path-to-fitted-models/Exp_obj_H1b/vcov.rds")
+vcov_Exp_obj_H1b <- readRDS("./model_specifications/Exp_obj_H1b/vcov.rds")
 
-model_Exp_obj_H1b <- readRDS("path-to-fitted-models/Exp_obj_H1b/model.rds")
+model_Exp_obj_H1b <- readRDS("./model_specifications/Exp_obj_H1b/model.rds")
 
 model_Exp_obj_H1b@vcov_beta <- as.matrix(vcov_Exp_obj_H1b) #replace vcov by cluster robust version
 
@@ -2303,9 +2258,9 @@ coef_model_Exp_obj_H1b <- summary(model_Exp_obj_H1b, ddf="Satterthwaite")$coeffi
 ### H1c-f
 ```{r}
 
-vcov_Exp_obj_H1c_f <- readRDS("path-to-fitted-models/Exp_obj_H1c_f/vcov.rds")
+vcov_Exp_obj_H1c_f <- readRDS("./model_specifications/Exp_obj_H1c_f/vcov.rds")
 
-model_Exp_obj_H1c_f <- readRDS("path-to-fitted-models/Exp_obj_H1c_f/model.rds")
+model_Exp_obj_H1c_f <- readRDS("./model_specifications/Exp_obj_H1c_f/model.rds")
 
 model_Exp_obj_H1c_f@vcov_beta <- as.matrix(vcov_Exp_obj_H1c_f) #replace vcov by cluster robust version
 
@@ -2327,9 +2282,9 @@ coef_model_Exp_obj_H1c_f <- summary(model_Exp_obj_H1c_f, ddf="Satterthwaite")$co
 ### H1g_j
 ```{r}
 
-vcov_Exp_obj_H1g_j <- readRDS("path-to-fitted-models/Exp_obj_H1g_j/vcov.rds")
+vcov_Exp_obj_H1g_j <- readRDS("./model_specifications/Exp_obj_H1g_j/vcov.rds")
 
-model_Exp_obj_H1g_j <- readRDS("path-to-fitted-models/Exp_obj_H1g_j/model.rds")
+model_Exp_obj_H1g_j <- readRDS("./model_specifications/Exp_obj_H1g_j/model.rds")
 
 model_Exp_obj_H1g_j@vcov_beta <- as.matrix(vcov_Exp_obj_H1g_j) #replace vcov by cluster robust version
 
@@ -2352,9 +2307,9 @@ coef_model_Exp_obj_H1g_j <- summary(model_Exp_obj_H1g_j, ddf="Satterthwaite")$co
 ### H1k_n
 ```{r}
 
-vcov_Exp_obj_H1k_n <- readRDS("path-to-fitted-models/Exp_obj_H1k_n/vcov.rds")
+vcov_Exp_obj_H1k_n <- readRDS("./model_specifications/Exp_obj_H1k_n/vcov.rds")
 
-model_Exp_obj_H1k_n <- readRDS("path-to-fitted-models/Exp_obj_H1k_n/model.rds")
+model_Exp_obj_H1k_n <- readRDS("./model_specifications/Exp_obj_H1k_n/model.rds")
 
 model_Exp_obj_H1k_n@vcov_beta <- as.matrix(vcov_Exp_obj_H1k_n) #replace vcov by cluster robust version
 
@@ -2535,9 +2490,9 @@ stargazer(anova_Exp_obj_H1, summary = FALSE, rownames = FALSE, align = TRUE, dig
 
 ### H2a
 ```{r}
-model_Exp_obj_H2a <- readRDS("path-to-fitted-models/Exp_obj_H2a/model.rds")
+model_Exp_obj_H2a <- readRDS("./model_specifications/Exp_obj_H2a/model.rds")
 
-vcov_Exp_obj_H2a <- readRDS("path-to-fitted-models/Exp_obj_H2a/vcov.rds")
+vcov_Exp_obj_H2a <- readRDS("./model_specifications/Exp_obj_H2a/vcov.rds")
 
 model_Exp_obj_H2a@vcov_beta <- as.matrix(vcov_Exp_obj_H2a) #replace vcov by cluster robust version
 
@@ -2580,12 +2535,12 @@ ggintplot(model_Exp_obj_H2a_lme4, varnames = c("growth", "social_protection"),
 
 ### H2b
 ```{r}
-model_Exp_obj_H2b <- readRDS("path-to-fitted-models/Exp_obj_H2b/model.rds")
+model_Exp_obj_H2b <- readRDS("./model_specifications/Exp_obj_H2b/model.rds")
 
 
-model_Exp_obj_H2b <- readRDS("path-to-fitted-models/Exp_obj_H2b/model.rds")
+model_Exp_obj_H2b <- readRDS("./model_specifications/Exp_obj_H2b/model.rds")
 
-vcov_Exp_obj_H2b <- readRDS("path-to-fitted-models/Exp_obj_H2b/vcov.rds")
+vcov_Exp_obj_H2b <- readRDS("./model_specifications/Exp_obj_H2b/vcov.rds")
 
 model_Exp_obj_H2b@vcov_beta <- as.matrix(vcov_Exp_obj_H2b) #replace vcov by cluster robust version
 ```
@@ -2597,11 +2552,11 @@ summary(model_Exp_obj_H2b)
 
 ### H2c
 ```{r}
-model_Exp_obj_H2c <- readRDS("path-to-fitted-models/Exp_obj_H2c/model.rds")
+model_Exp_obj_H2c <- readRDS("./model_specifications/Exp_obj_H2c/model.rds")
 
 
 
-vcov_Exp_obj_H2c <- readRDS("path-to-fitted-models/Exp_obj_H2c/vcov.rds")
+vcov_Exp_obj_H2c <- readRDS("./model_specifications/Exp_obj_H2c/vcov.rds")
 
 model_Exp_obj_H2c@vcov_beta <- as.matrix(vcov_Exp_obj_H2c) #replace vcov by cluster robust version
 ```
@@ -2630,11 +2585,11 @@ ggintplot(obj = as.lmerMod.lmerModLmerTest(model_Exp_obj_H2c), varnames = c("gdp
 ### H2d
 ```{r}
 
-model_Exp_obj_H2d <- readRDS("path-to-fitted-models/Exp_obj_H2d/model.rds")
+model_Exp_obj_H2d <- readRDS("./model_specifications/Exp_obj_H2d/model.rds")
 
 
 
-vcov_Exp_obj_H2d <- readRDS("path-to-fitted-models/Exp_obj_H2d/vcov.rds")
+vcov_Exp_obj_H2d <- readRDS("./model_specifications/Exp_obj_H2d/vcov.rds")
 
 model_Exp_obj_H2d@vcov_beta <- as.matrix(vcov_Exp_obj_H2d) #replace vcov by cluster robust version
 
@@ -2673,9 +2628,9 @@ data_all %>% select(democracy, importance_rich) %>% cor(use = "pairwise.complete
 ### H3
 
 ```{r}
-model_Exp_obj_H3 <- readRDS("path-to-fitted-models/Exp_obj_H3/model.rds")
+model_Exp_obj_H3 <- readRDS("./model_specifications/Exp_obj_H3/model.rds")
 
-vcov_Exp_obj_H3 <- readRDS("path-to-fitted-models/Exp_obj_H3/vcov.rds")
+vcov_Exp_obj_H3 <- readRDS("./model_specifications/Exp_obj_H3/vcov.rds")
 
 model_Exp_obj_H3@vcov_beta <- as.matrix(vcov_Exp_obj_H3) #replace vcov by cluster robust version
 ```
@@ -2701,37 +2656,37 @@ ggsave(file = "../figures/Exp_obj_H3d_conditional_effect_GDP_altruistic_behaviou
 
 ### H4a1
 ```{r}
-model_Exp_obj_H4a1_med <- readRDS("path-to-fitted-models/Exp_obj_H4a1/modelmed.rds")
+model_Exp_obj_H4a1_med <- readRDS("./model_specifications/Exp_obj_H4a1/modelmed.rds")
 
-vcov_Exp_obj_H4a1_med <- readRDS("path-to-fitted-models/Exp_obj_H4a1/vcovmed.rds")
+vcov_Exp_obj_H4a1_med <- readRDS("./model_specifications/Exp_obj_H4a1/vcovmed.rds")
 
-model_Exp_obj_H4a1_out <- readRDS("path-to-fitted-models/Exp_obj_H4a1/modelout.rds")
+model_Exp_obj_H4a1_out <- readRDS("./model_specifications/Exp_obj_H4a1/modelout.rds")
 
-vcov_Exp_obj_H4a1_out <- readRDS("path-to-fitted-models/Exp_obj_H4a1/vcovout.rds")
+vcov_Exp_obj_H4a1_out <- readRDS("./model_specifications/Exp_obj_H4a1/vcovout.rds")
 
 
 ```
 
 ### H4a2
 ```{r}
-model_Exp_obj_H4a2_med <- readRDS("path-to-fitted-models/Exp_obj_H4a2/modelmed.rds")
+model_Exp_obj_H4a2_med <- readRDS("./model_specifications/Exp_obj_H4a2/modelmed.rds")
 
-vcov_Exp_obj_H4a2_med <- readRDS("path-to-fitted-models/Exp_obj_H4a2/vcovmed.rds")
+vcov_Exp_obj_H4a2_med <- readRDS("./model_specifications/Exp_obj_H4a2/vcovmed.rds")
 
-model_Exp_obj_H4a2_out <- readRDS("path-to-fitted-models/Exp_obj_H4a2/modelout.rds")
+model_Exp_obj_H4a2_out <- readRDS("./model_specifications/Exp_obj_H4a2/modelout.rds")
 
-vcov_Exp_obj_H4a2_out <- readRDS("path-to-fitted-models/Exp_obj_H4a2/vcovout.rds")
+vcov_Exp_obj_H4a2_out <- readRDS("./model_specifications/Exp_obj_H4a2/vcovout.rds")
 ```
 
 ### H4b
 ```{r}
-model_Exp_obj_H4b_med <- readRDS("path-to-fitted-models/Exp_obj_H4b/modelmed.rds")
+model_Exp_obj_H4b_med <- readRDS("./model_specifications/Exp_obj_H4b/modelmed.rds")
 
-vcov_Exp_obj_H4b_med <- readRDS("path-to-fitted-models/Exp_obj_H4b/vcovmed.rds")
+vcov_Exp_obj_H4b_med <- readRDS("./model_specifications/Exp_obj_H4b/vcovmed.rds")
 
-model_Exp_obj_H4b_out <- readRDS("path-to-fitted-models/Exp_obj_H4b/modelout.rds")
+model_Exp_obj_H4b_out <- readRDS("./model_specifications/Exp_obj_H4b/modelout.rds")
 
-vcov_Exp_obj_H4b_out <- readRDS("path-to-fitted-models/Exp_obj_H4b/vcovout.rds")
+vcov_Exp_obj_H4b_out <- readRDS("./model_specifications/Exp_obj_H4b/vcovout.rds")
 ```
 
 ```{r}
@@ -2741,13 +2696,13 @@ sobel_test()
 
 ### H4c_d
 ```{r}
-model_Exp_obj_H4c_d_med <- readRDS("path-to-fitted-models/Exp_obj_H4c_d/modelmed.rds")
+model_Exp_obj_H4c_d_med <- readRDS("./model_specifications/Exp_obj_H4c_d/modelmed.rds")
 
-vcov_Exp_obj_H4c_d_med <- readRDS("path-to-fitted-models/Exp_obj_H4c_d/vcovmed.rds")
+vcov_Exp_obj_H4c_d_med <- readRDS("./model_specifications/Exp_obj_H4c_d/vcovmed.rds")
 
-model_Exp_obj_H4c_d_out <- readRDS("path-to-fitted-models/Exp_obj_H4c_d/modelout.rds")
+model_Exp_obj_H4c_d_out <- readRDS("./model_specifications/Exp_obj_H4c_d/modelout.rds")
 
-vcov_Exp_obj_H4c_d_out <- readRDS("path-to-fitted-models/Exp_obj_H4c_d/vcovout.rds")
+vcov_Exp_obj_H4c_d_out <- readRDS("./model_specifications/Exp_obj_H4c_d/vcovout.rds")
 ```
 
 

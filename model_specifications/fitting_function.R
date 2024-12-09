@@ -23,7 +23,7 @@ run_model_fit <- function(predictors = NULL,
                           vcov_target = list(1,2), 
                           logistic = FALSE,
                           suffix_output_files = "",
-                          data_file_path = "../data_all.csv",
+                          data_file_path = "../data.csv",
                           seed = 42){
   
   drop_na_variables <- c(predictors[!grepl(':', predictors)], drop_na_variables)
