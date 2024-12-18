@@ -21,7 +21,11 @@ Understanding the link between well-being and income is crucial for assessing th
 * the code for the [simulation study](simulation_vcov_estimator) we conducted to justify the change of variance-covariance estimator
 
 ## Instructions for using the code
+Since the dataset is not publicly available, we provide a randomly generated demo dataset that can be used to retrace the code. It is also much smaller than the true dataset, which allows running the model fitting on a normal computer. For the true dataset, fitting the models requires more computing power.
 
+Each model can be fitted by executing the corresponding R script under [model_specifications](model_specifications). The called [fitting routine](fitting_function.R) uses the dataset stored under "data.csv" in the root folder. If you want to use the demo dataset, you can rename it accordingly. If you get access to the Gallup dataset, you first need to process it following the data cleaning and integration [notebook](prepare_dataset.Rmd). 
+
+Once the models are fitted, the results are stored in the same folder as the model specification script and can be analysed with [this notebook](analyse_results.Rmd).
 
 ## Sytem requirements
 The code is based on R version 4.3.2 and uses the following R packages:
