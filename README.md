@@ -21,48 +21,14 @@ Understanding the link between well-being and income is crucial for assessing th
 * the code for the [simulation study](simulation_vcov_estimator) we conducted to justify the change of variance-covariance estimator
 
 ## Instructions for using the code
-Since the dataset is not publicly available, we provide a randomly generated demo dataset that can be used to retrace the code. It is also much smaller than the true dataset, which allows running the model fitting on a normal computer. For the true dataset, fitting the models requires more computing power.
+When opening the R project for the first time, renv (a package ensuring consistency in R and package versions) will bootstrap itself and then inform you that one or more packages recorded in the lockfile are not installed. In order to install the required packages in the local environment, execute renv::restore() in the console (see the renv documentation for more details).
 
-Each model can be fitted by executing the corresponding R script under [model_specifications](model_specifications). The called [fitting routine](fitting_function.R) uses the dataset stored under "data.csv" in the root folder. If you want to use the demo dataset, you can rename it accordingly. If you get access to the Gallup dataset, you first need to process it following the data cleaning and integration [notebook](prepare_dataset.Rmd). 
+Since the dataset is not publicly available, we provide a randomly generated demo dataset that can be used to retrace the code. It is also much smaller than the true dataset, which allows running the model fitting on a normal computer. For the true dataset, fitting the models requires more computing power. (We developed the code on a Windows platform (x86_64-w64-mingw32/x64 (64-bit)) and outsourced the computationally heavy model fitting to UNIL's [HPC cluster](https://wiki.unil.ch/ci/books/high-performance-computing-hpc/page/curnagl).)
+
+Each model can be fitted by executing the corresponding R script under [model_specifications](model_specifications) (when using RStudio, make sure to set the working directory to the sourcefile's path). The called [fitting routine](fitting_function.R) uses the dataset stored under "data.csv" in the root folder. If you want to use the demo dataset, you can rename it accordingly. If you get access to the Gallup dataset, you first need to process it following the data cleaning and integration [notebook](prepare_dataset.Rmd). 
 
 Once the models are fitted, the results are stored in the same folder as the model specification script and can be analysed with [this notebook](analyse_results.Rmd).
 
-## Sytem requirements
-The code is based on R version 4.3.2 and uses the following R packages:
 
-showtext_0.9-6      
-showtextdb_3.0      
-sysfonts_0.8.8      
-broom_1.0.4         
-scales_1.2.1        
-patchwork_1.2.0    
-rcartocolor_2.1.1   
-viridis_0.6.4       
-viridisLite_0.4.2   
-stringr_1.5.0       
-ggpubr_0.6.0        
-ggsci_3.0.0        
-car_3.1-2           
-carData_3.0-5       
-polycor_0.8-1       
-corrplot_0.92       
-ggplot2_3.4.2       
-tibble_3.2.1       
-lmtest_0.9-40       
-zoo_1.8-12          
-lmerTest_3.1-3      
-MuMIn_1.47.5        
-countrycode_1.5.0   
-RColorBrewer_1.1-3         
-sp_2.1-2            
-interactions_1.1.5  
-stargazer_5.2.3     
-tidyr_1.3.0         
-parameters_0.21.2              
-clubSandwich_0.5.10        
-lme4_1.1-34         
-Matrix_1.6-1.1      
-readr_2.1.4         
-dplyr_1.1.2 
 
-We developed the code on a Windows platform (x86_64-w64-mingw32/x64 (64-bit)) and outsourced the computationally heavy model fitting to UNIL's [HPC cluster](https://wiki.unil.ch/ci/books/high-performance-computing-hpc/page/curnagl).
+
