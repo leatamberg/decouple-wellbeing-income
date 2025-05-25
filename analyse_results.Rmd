@@ -56,7 +56,7 @@ as.lmerMod.lmerModLmerTest <- function(x) {
 ```
 
 ```{r}
-data_all <- readr::read_csv("data_all.csv", col_types = "idicccddddcddciiiiiiddiiiiiiiddddddddddddddddddddddddcddddid") %>% 
+data_all <- readr::read_csv("data.csv", col_types = "idicccddddcddciiiiiiddiiiiiiiddddddddddddddddddddddddcddddid") %>% 
   mutate(across(
     c(year,
       gender,
@@ -664,11 +664,6 @@ stargazer(anova_H1, summary = FALSE, rownames = FALSE, align = TRUE, digits = 1)
 Plot coefficients
 
 ```{r}
-order_needs <- c2 %>% filter(type == "Individual need satisfaction") %>% arrange(desc(Estimate)) %>% pull(Predictor) %>% as.character() # to order needs by effect size
-cat(paste(order_needs, collapse = '", "'))
-```
-
-```{r}
 
 
 coef_table <- function(model){
@@ -818,7 +813,7 @@ apply_consistent_x_lims(combined_plot)
 
 
   
-ggsave(file = "../figures/coeffient_sizes.pdf", width = 180, height = 223, units = "mm", device=cairo_pdf)
+ggsave(file = "figures/coeffient_sizes.pdf", width = 180, height = 223, units = "mm", device=cairo_pdf, create.dir = TRUE)
 
 ```
 
@@ -1054,7 +1049,7 @@ effect_plot <-
 
 
 
-ggsave(file = "../figures/effect_plot_gdp_median.pdf", width = 180, height = 130, units = "mm", device=cairo_pdf)
+ggsave(file = "figures/effect_plot_gdp_median.pdf", width = 180, height = 130, units = "mm", device=cairo_pdf, create.dir = TRUE)
   
 ```
 
@@ -1213,7 +1208,7 @@ ggintplot(model_H2a_lme4, varnames = c("growth", "social_protection"),
           font_family = "Latin Modern Roman 10")
 
 
-ggsave(file = "../figures/H2a_conditional_effect_growth_protection.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf)
+ggsave(file = "figures/H2a_conditional_effect_growth_protection.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf, create.dir = TRUE)
 ```
 ```{r}
 ggintplot(model_H2a_lme4, varnames = c("relative_income", "social_protection"), 
@@ -1260,7 +1255,7 @@ ggintplot(model_H2b_lme4, varnames = c("gdp", "government_effectiveness"),
           rugsize = 0.005,
           font_family = "Latin Modern Roman 10")
 
-#ggsave(file = "../figures/H2b_conditional_effect_gdp_government_effectiveness.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf)
+#ggsave(file = "figures/H2b_conditional_effect_gdp_government_effectiveness.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf, create.dir = TRUE)
 ```
 
 ```{r}
@@ -1332,7 +1327,7 @@ ggintplot(model_H2c_lme4, varnames = c("gdp", "democracy"),
           rugsize = 0.005,
           font_family = "Latin Modern Roman 10")
 
-ggsave(file = "../figures/H2c_conditional_effect_gdp_democracy_index.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf)
+ggsave(file = "figures/H2c_conditional_effect_gdp_democracy_index.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf, create.dir = TRUE)
 
 ```
 ```{r}
@@ -1391,7 +1386,7 @@ ggintplot(obj = model_H2d_lme4, varnames = c("gdp", "importance_rich"),
           twoways = FALSE, 
           rugsize = 0.005, font_family = "Latin Modern Roman 10")
 
-#ggsave(file = "../figures/H2d_conditional_effect_gdp_importance_rich.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf)
+#ggsave(file = "figures/H2d_conditional_effect_gdp_importance_rich.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf, create.dir = TRUE)
 ```
 
 ```{r}
@@ -1657,7 +1652,7 @@ ggintplot(obj = model_H3, varnames = c("gendermale", "relative_income"),
           font_family = "Latin Modern Roman 10",
           max_x = 25)
 
-ggsave(file = "../figures/H3b_conditional_effect_gender_relative_income.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf)
+ggsave(file = "figures/H3b_conditional_effect_gender_relative_income.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf, create.dir = TRUE)
 
 ```
 ## H3c
@@ -1676,7 +1671,7 @@ ggintplot_categorical_moderator(obj = as.lmerMod.lmerModLmerTest(model_H3), pred
   xlab("Level of education") +
   scale_x_discrete(labels = c("low", "medium", "high"))
 
-ggsave(file = "../figures/H3c_conditional_effect_education_personal_income.pdf", width = 128, height = 65, units = "mm", device=cairo_pdf)
+ggsave(file = "figures/H3c_conditional_effect_education_personal_income.pdf", width = 128, height = 65, units = "mm", device=cairo_pdf, create.dir = TRUE)
 ```
 ```{r}
 ggintplot_categorical_moderator(obj = as.lmerMod.lmerModLmerTest(model_H3), pred = "relative_income", 
@@ -1689,7 +1684,7 @@ ggintplot_categorical_moderator(obj = as.lmerMod.lmerModLmerTest(model_H3), pred
   xlab("Level of education") +
   scale_x_discrete(labels = c("low", "medium", "high"))
 
-ggsave(file = "../figures/H3c_conditional_effect_education_relative_income.pdf", width = 128, height = 65, units = "mm", device=cairo_pdf)
+ggsave(file = "figures/H3c_conditional_effect_education_relative_income.pdf", width = 128, height = 65, units = "mm", device=cairo_pdf, create.dir = TRUE)
 ```
 ```{r}
 ggintplot_categorical_moderator(obj = as.lmerMod.lmerModLmerTest(model_H3), pred = "growth", 
@@ -1703,7 +1698,7 @@ ggintplot_categorical_moderator(obj = as.lmerMod.lmerModLmerTest(model_H3), pred
   xlab("Need for education") +
   scale_x_discrete(labels = c("not fulfilled", "fulfilled"))
 
-ggsave(file = "../figures/H3c_conditional_effect_education_growth_for_mulitplot.pdf", width = 80, height = 50, units = "mm", device=cairo_pdf)
+ggsave(file = "figures/H3c_conditional_effect_education_growth_for_mulitplot.pdf", width = 80, height = 50, units = "mm", device=cairo_pdf, create.dir = TRUE)
 ```
 ## H3d
 
@@ -1718,7 +1713,7 @@ ggintplot(obj = as.lmerMod.lmerModLmerTest(model_H3), varnames = c("relative_inc
           twoways = FALSE, 
           font_family = "Latin Modern Roman 10")
 
-ggsave(file = "../figures/H3d_conditional_effect_relative_income_altruistic_behaviour.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf)
+ggsave(file = "figures/H3d_conditional_effect_relative_income_altruistic_behaviour.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf, create.dir = TRUE)
 
 ```
 
@@ -1880,7 +1875,7 @@ rownames(p_values) <- c("log(Personal income)", "Relative income", "log(GDP)", "
 
 
 ```{r}
-cairo_pdf(file = "../figures/logistic_regression_needs.pdf", width = 1.5*3.8, height = 1.5*2, family = "Computer Modern Sans", pointsize = 9)
+cairo_pdf(file = "figures/logistic_regression_needs.pdf", width = 1.5*3.8, height = 1.5*2, family = "Computer Modern Sans", pointsize = 9)
 par(xpd=TRUE, family = "Computer Modern Sans")
 corrplot(coefficients, method = "color", is.corr = FALSE, order = "original", 
          tl.col = "black", tl.srt = 45, tl.cex = 1, cl.cex = 1, p.mat = p_values, sig.level = 0.05, pch = 4, pch.cex = 0, 
@@ -1988,7 +1983,7 @@ ggarrange(scatter_plot_need_gdp("country_average_food", y_optimal = 100) +
           nrow = 2, ncol = 2, common.legend = TRUE, legend = "top") %>% 
   annotate_figure(left = text_grob("Share of population with need fulfilled", rot = 90, size=9, family="Computer Modern Sans"), bottom = text_grob("GDP ($ per capita)", size=9, family="Computer Modern Sans"))
 
-ggsave(file = "../figures/scatter_plot_needs_gdp_connected_highlighted.pdf", width = 180, height = 160, units = "mm", device=cairo_pdf)
+ggsave(file = "figures/scatter_plot_needs_gdp_connected_highlighted.pdf", width = 180, height = 160, units = "mm", device=cairo_pdf, create.dir = TRUE)
 ```
 
 
@@ -2576,7 +2571,7 @@ ggintplot(obj = as.lmerMod.lmerModLmerTest(model_Exp_obj_H2c), varnames = c("gdp
           rugsize = 0.005,
           font_family = "Latin Modern Roman 10")
 
-#ggsave(file = "../figures/Exp_obj_H2c_conditional_effect_gdp_democracy_index.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf)
+#ggsave(file = "figures/Exp_obj_H2c_conditional_effect_gdp_democracy_index.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf, create.dir = TRUE)
 
 ```
 
@@ -2612,7 +2607,7 @@ ggintplot(obj = as.lmerMod.lmerModLmerTest(model_Exp_obj_H2d), varnames = c("gdp
           twoways = FALSE, 
           rugsize = 0.005, font_family = "Latin Modern Roman 10")
 
-#ggsave(file = "../figures/Exp_obj_H2d_conditional_effect_gdp_importance_rich.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf)
+#ggsave(file = "figures/Exp_obj_H2d_conditional_effect_gdp_importance_rich.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf, create.dir = TRUE)
 ```
 
 Could this result be related to our other result that the effect of GDP is only significant for high values of democracy?
@@ -2648,7 +2643,7 @@ ggintplot(obj = as.lmerMod.lmerModLmerTest(model_Exp_obj_H3), varnames = c("gdp"
           twoways = FALSE, 
           font_family = "Latin Modern Roman 10")
 
-ggsave(file = "../figures/Exp_obj_H3d_conditional_effect_GDP_altruistic_behaviour.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf)
+ggsave(file = "figures/Exp_obj_H3d_conditional_effect_GDP_altruistic_behaviour.pdf", width = 160, height = 110, units = "mm", device=cairo_pdf, create.dir = TRUE)
 
 ```
 
