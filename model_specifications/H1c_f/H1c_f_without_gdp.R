@@ -1,4 +1,4 @@
-source("scripts_cluster/fitting_function.R")
+source("../fitting_function.R")
 
 run_model_fit(predictors = c("food",
                              "housing",
@@ -17,6 +17,5 @@ run_model_fit(predictors = c("food",
                              "personal_income",
                              "relative_income",
                              "growth"), 
-              data_file_path = "C:/Users/ltamberg/OneDrive - Université de Lausanne/PhD/Determinants wellbeing/data/Gallup World Poll/data_all.csv",
               suffix_output_files = "without_gdp",
               cluster_robust_vcov = FALSE)

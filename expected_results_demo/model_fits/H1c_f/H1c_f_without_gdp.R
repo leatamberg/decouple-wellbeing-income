@@ -1,0 +1,21 @@
+source("../fitting_function.R")
+
+run_model_fit(predictors = c("food",
+                             "housing",
+                             "health",
+                             "water",
+                             "air",
+                             "healthcare",
+                             "security",
+                             "social_support",
+                             "respect",
+                             "education",
+                             "interesting_activity",
+                             "recreation",
+                             "occupation",
+                             "freedom",
+                             "personal_income",
+                             "relative_income",
+                             "growth"), 
+              suffix_output_files = "without_gdp",
+              cluster_robust_vcov = FALSE)

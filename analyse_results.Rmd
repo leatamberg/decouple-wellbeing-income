@@ -33,10 +33,10 @@ library(rcartocolor)
 library(patchwork)
 library(scales)
 
-library(showtext)
-font_add("Latin Modern Roman 10", regular = "C:/Windows/Fonts/Latin Modern Roman 10/lmroman10-regular.otf", bold = "C:/Windows/Fonts/Latin Modern Roman 10/lmroman10-bold.otf", italic = "C:/Windows/Fonts/Latin Modern Roman 10/lmroman10-italic.otf", bolditalic = "C:/Windows/Fonts/Latin Modern Roman 10/lmroman10-bolditalic.otf")
-font_add("Computer Modern Sans", regular = "C:/Windows/Fonts/CMU Sans Serif/cmunss.ttf", bold = "C:/Windows/Fonts/CMU Sans Serif/cmunsx.ttf", italic = "C:/Windows/Fonts/CMU Sans Serif/cmunsi.ttf")
-showtext_auto()
+# library(showtext)
+# font_add("Latin Modern Roman 10", regular = "C:/Windows/Fonts/Latin Modern Roman 10/lmroman10-regular.otf", bold = "C:/Windows/Fonts/Latin Modern Roman 10/lmroman10-bold.otf", italic = "C:/Windows/Fonts/Latin Modern Roman 10/lmroman10-italic.otf", bolditalic = "C:/Windows/Fonts/Latin Modern Roman 10/lmroman10-bolditalic.otf")
+# font_add("Computer Modern Sans", regular = "C:/Windows/Fonts/CMU Sans Serif/cmunss.ttf", bold = "C:/Windows/Fonts/CMU Sans Serif/cmunsx.ttf", italic = "C:/Windows/Fonts/CMU Sans Serif/cmunsi.ttf")
+# showtext_auto()
 
 source("helper_functions.R")
 
@@ -206,17 +206,6 @@ data_H1b <- model_H1b@frame
 ```
 
 
-```{r}
-data_all_needs <- data_H1b %>% filter(if_all(c(food, housing, health, water, healthcare, security, social_support, respect, interesting_activity, recreation, occupation, freedom), ~ . == 1), education %in% c(2,3)) %>% filter(relationship_status=="single", education == 2, gender == "male") #, age == 40)
-predictions <- predict(model_H1b, newdata = data_all_needs, re.form = NA)
-
-data_all_needs %>% pull(life_evaluation) %>% hist(freq = FALSE)
-```
-```{r}
-data_all_needs %>% cbind(predictions) %>% ggplot() +
-  geom_point(mapping = aes(x=exp(personal_income), y = predictions, color = age))
-  #xlim(0,50000)
-```
 
 ```{r}
 p_values_model_H1b <- summary(model_H1b, ddf="Satterthwaite")$coefficients[,"Pr(>|t|)"]
@@ -1278,7 +1267,7 @@ ggintplot(model_H2b_lme4, varnames = c("growth", "government_effectiveness"),
 
 
 ```{r}
-ggintplot(model_H2b, varnames = c("personal_income", "government_effectiveness"), 
+ggintplot(model_H2b_lme4, varnames = c("personal_income", "government_effectiveness"), 
           vcov = vcov_H2b,
           varlabs=c("personal income", "Government effectiveness index"),
           alpha = 0.05,
@@ -1288,7 +1277,7 @@ ggintplot(model_H2b, varnames = c("personal_income", "government_effectiveness")
           font_family = "Latin Modern Roman 10")
 ```
 ```{r}
-ggintplot(model_H2b, varnames = c("relative_income", "government_effectiveness"), 
+ggintplot(model_H2b_lme4, varnames = c("relative_income", "government_effectiveness"), 
           vcov = vcov_H2b,
           varlabs=c("relative_income", "Government effectiveness index"),
           alpha = 0.05,
@@ -1331,7 +1320,7 @@ ggsave(file = "figures/H2c_conditional_effect_gdp_democracy_index.pdf", width = 
 
 ```
 ```{r}
-ggintplot(obj = model_H2c, varnames = c("democracy", "gdp"), 
+ggintplot(obj = model_H2c_lme4, varnames = c("democracy", "gdp"), 
           vcov = vcov_H2c,
           varlabs=c("Democracy", "GDP"),
           other_interactions = list("personal_income", "relative_income", "growth"),
@@ -1390,7 +1379,7 @@ ggintplot(obj = model_H2d_lme4, varnames = c("gdp", "importance_rich"),
 ```
 
 ```{r}
-ggintplot(obj = model_H2d, varnames = c("growth", "importance_rich"), 
+ggintplot(obj = model_H2d_lme4, varnames = c("growth", "importance_rich"), 
           vcov = vcov_H2d,
           varlabs=c("GDP growth rate", "Importance to be rich"),
           alpha = 0.1,
@@ -1400,7 +1389,7 @@ ggintplot(obj = model_H2d, varnames = c("growth", "importance_rich"),
           rugsize = 0.005, font_family = "Latin Modern Roman 10")
 ```
 ```{r}
-ggintplot(obj = model_H2d, varnames = c("relative_income", "importance_rich"), 
+ggintplot(obj = model_H2d_lme4, varnames = c("relative_income", "importance_rich"), 
           vcov = vcov_H2d,
           varlabs=c("Personal income", "Importance to be rich"),
           alpha = 0.05,
@@ -1640,7 +1629,7 @@ no significant interactions
 
 ## H3b
 ```{r}
-ggintplot(obj = model_H3, varnames = c("gendermale", "relative_income"), 
+ggintplot(obj = model_H3_lme4, varnames = c("gendermale", "relative_income"), 
           vcov = vcov_H3,
           varlabs=c("male gender","Relative income"),
           other_interactions = list("personal_income",
@@ -1790,7 +1779,8 @@ summary(model_H4b_out)
 ```
 
 ```{r}
-sobel_test("Hypothesis" = "H4-b", "model_med" = model_H4b_med, "vcov_med" = vcov_H4b_med, "model_out" = model_H4b_out, "vcov_out" = vcov_H4b_out, "predictor" = "growth", "mediator" = "expected_economic_conditions", "Predictor" = "GDP growth", "Mediator" = "Expected economic conditions", method = "Satterthwaite", decimal_places = 20)
+sobel_test("Hypothesis" = "H4-b", "model_med" = model_H4b_med, "vcov_med" = vcov_H4b_med, "model_out" = model_H4b_out, "vcov_out" = vcov_H4b_out, model_orig = model_H1k_n, vcov_orig = vcov_H1k_n,
+           "predictor" = "growth", "mediator" = "expected_economic_conditions", "Predictor" = "GDP growth", "Mediator" = "Expected economic conditions", method = "Satterthwaite", decimal_places = 20)
 ```
 
 
@@ -2373,15 +2363,15 @@ stargazer(model_Exp_obj_H1a_lme4, model_Exp_obj_H1b_lme4,
 part 2
 
 ```{r}
-model_Exp_obj_B2_lme4 <- as.lmerMod.lmerModLmerTest(model_Exp_obj_B2)
+model_B2_lme4 <- as.lmerMod.lmerModLmerTest(model_B2)
 model_Exp_obj_H1c_f_lme4 <- as.lmerMod.lmerModLmerTest(model_Exp_obj_H1c_f)
-stargazer(model_Exp_obj_B2_lme4, model_Exp_obj_H1c_f_lme4,
+stargazer(model_B2_lme4, model_Exp_obj_H1c_f_lme4,
           #type = "text", 
           report = 'vc*', 
           omit = c("year*"),
-          coef = list(coef_model_Exp_obj_B2, coef_model_Exp_obj_H1c_f),
-          p = list(p_values_model_Exp_obj_B2, p_values_model_Exp_obj_H1c_f),
-          se = list(sqrt(diag(vcov_Exp_obj_B2)), sqrt(diag(vcov_Exp_obj_H1c_f))), 
+          coef = list(coef_model_B2, coef_model_Exp_obj_H1c_f),
+          p = list(p_values_model_B2, p_values_model_Exp_obj_H1c_f),
+          se = list(sqrt(diag(vcov_B2)), sqrt(diag(vcov_Exp_obj_H1c_f))), 
           intercept.bottom = FALSE, 
           align = TRUE, 
           dep.var.caption = "",
@@ -2397,13 +2387,13 @@ stargazer(model_Exp_obj_B2_lme4, model_Exp_obj_H1c_f_lme4,
           covariate.labels = c("Intercept", "Male", "Age", "Age (squared)", "Partnered", "Separated", "Widowed", "Food", "Housing", "Health", "Water", "Air", "Healthcare", "Security", "Social support", "Respect", "Education", "Interesting activity", "Recreation", "Occupation", "Freedom", "Log(personal income)", "Relative income", "Log(GDP)", "GDP growth"),
           keep.stat = c("n", "ser"),
           add.lines = list(c("Residual standard deviation", 
-                             signif(sigma(model_Exp_obj_B2),4),
+                             signif(sigma(model_B2),4),
                              signif(sigma(model_Exp_obj_H1c_f),4)),
                            c("Marginal Pseudo-$R^2$", 
-                              signif(MuMIn::r.squaredGLMM(model_Exp_obj_B2)[[1,"R2m"]],4),
+                              signif(MuMIn::r.squaredGLMM(model_B2)[[1,"R2m"]],4),
                               signif(MuMIn::r.squaredGLMM(model_Exp_obj_H1c_f)[[1,"R2m"]],4)),
                             c("Conditional Pseudo-$R^2$", 
-                              signif(MuMIn::r.squaredGLMM(model_Exp_obj_B2)[[1,"R2c"]],4),
+                              signif(MuMIn::r.squaredGLMM(model_B2)[[1,"R2c"]],4),
                               signif(MuMIn::r.squaredGLMM(model_Exp_obj_H1c_f)[[1,"R2c"]],4))),
           star.char = c("+","*","**","***"),
           star.cutoffs =c(0.1, 0.05, 0.01, 0.001), 
@@ -2460,23 +2450,6 @@ stargazer(model_Exp_obj_H1g_j_lme4, model_Exp_obj_H1k_n_lme4,
           label = "tab:RQ1_part3")
 
 
-```
-
-### F-tests
-
-```{r}
-model_Exp_obj_B2_ML <- readRDS("model_B2_ML.rds")
-model_Exp_obj_H1a_ML <- readRDS("model_Exp_obj_H1a_ML.rds")
-model_Exp_obj_H1b_ML <- readRDS("model_Exp_obj_H1b_ML.rds")
-model_Exp_obj_H1c_f_ML <- readRDS("model_Exp_obj_H1c_f_ML.rds")
-model_Exp_obj_H1g_j_ML <- readRDS("model_Exp_obj_H1g_j_ML.rds")
-model_Exp_obj_H1k_n_ML <- readRDS("model_Exp_obj_H1k_n_ML.rds")
-
-```
-
-```{r}
-anova_Exp_obj_H1 <- data.frame(anova(model_Exp_obj_B2_ML, model_Exp_obj_H1c_f_ML, model_Exp_obj_H1g_j_ML, model_Exp_obj_H1k_n_ML)) %>% rownames_to_column() %>% mutate(rowname = c("B2", "H1-c-f", "H1-g-j", "H1-k-n")) %>% select(Model = rowname, `number of parameters`= npar, `Log-Likelihood` = logLik, Df, p = Pr..Chisq.)
-stargazer(anova_Exp_obj_H1, summary = FALSE, rownames = FALSE, align = TRUE, digits = 1)
 ```
 
 
@@ -2684,9 +2657,7 @@ model_Exp_obj_H4b_out <- readRDS("./model_specifications/Exp_obj_H4b/modelout.rd
 vcov_Exp_obj_H4b_out <- readRDS("./model_specifications/Exp_obj_H4b/vcovout.rds")
 ```
 
-```{r}
-sobel_test()
-```
+
 
 
 ### H4c_d
@@ -2715,7 +2686,7 @@ mediation_models <-
     list("Hypothesis" = "H4-d", "model_med" = model_Exp_obj_H4c_d_med, "vcov_med" = vcov_Exp_obj_H4c_d_med, "model_out" = model_Exp_obj_H4c_d_out, "vcov_out" = vcov_Exp_obj_H4c_d_out, "predictor" = "relative_income", "mediator" = "satisfaction_standard_living","Predictor" = "Relative income", "Mediator" = "Satisfaction standard of living")
   )
 
-mediation_results <- mediation_table(mediation_models, stars = TRUE, method = "Satterthwaite")
+mediation_results <- mediation_table(mediation_models, stars = TRUE, method = "Satterthwaite", model_orig = model_Exp_obj_H1k_n, vcov_orig = vcov_Exp_obj_H1k_n)
 
 
 
