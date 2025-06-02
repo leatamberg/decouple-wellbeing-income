@@ -21,10 +21,12 @@ Understanding the link between well-being and income is crucial for assessing th
 * a documentation of the [expected results](expected_results_demo) when using the demo dataset
 * several [utility functions](helper_functions.R), mostly for generating interaction plots
 * the code for the [simulation study](simulation_vcov_estimator) we conducted to justify the change of variance-covariance estimator
-* files and folders used by the R package renv to ensure consistency in R and package versions
+* files and folders used by the R package renv to ensure consistency in R package versions
 
 ## Instructions for using the code
-When opening the [R project](decouple-wellbeing-income.Rproj) for the first time, renv (a package ensuring consistency in R and package versions) will bootstrap itself and then inform you that one or more packages recorded in the lockfile are not installed. In order to install the required packages in the local environment, execute renv::restore() in the console (see the renv documentation for more details).
+We developed the code in R 4.3.2.
+
+When opening the [R project](decouple-wellbeing-income.Rproj) for the first time, renv (a package ensuring consistency in R package versions) will bootstrap itself and then inform you that one or more packages recorded in the lockfile are not installed. In order to install the required packages in the local environment, execute renv::restore() in the console (see the renv documentation for more details).
 
 Since the dataset is not publicly available, we provide a randomly generated demo dataset that can be used to retrace the code. It is also much smaller than the true dataset, which allows running the model fitting on a normal computer. For the true dataset, fitting the models requires more computing power. (We developed the code on a Windows platform (x86_64-w64-mingw32/x64 (64-bit)) and outsourced the computationally heavy model fitting to UNIL's [HPC cluster](https://wiki.unil.ch/ci/books/high-performance-computing-hpc/page/curnagl).)
 
