@@ -9,7 +9,7 @@ library(tidyr)
 
 
 data_needs <- 
-  readr::read_csv("../data_all.csv", col_types = "idicccddddcddciiiiiiddiiiiiiiddddddddddddddddddddddddcddddid") %>% 
+  readr::read_csv("../data.csv", col_types = "idicccddddcddciiiiiiddiiiiiiiddddddddddddddddddddddddcddddid") %>% 
   mutate(across(
     c(year,
       gender,
@@ -101,4 +101,4 @@ fit_models_glmer <- function(outcome_vars, rhs_formula, data, ...) {
 
 models_needs <- fit_models_glmer(outcome_vars, rhs_formula, data_needs, nAGQ = 0L, family="binomial", verbose = TRUE)
 
-saveRDS(models_needs, "models_needs.rds")
+saveRDS(models_needs, "Exp_needs_as_outcomes/models_needs.rds")
