@@ -1049,7 +1049,7 @@ ggsave(file = "figures/effect_plot_gdp_median.pdf", width = 180, height = 130, u
 
 
 
-determine relationship between GDP and median income
+### determine relationship between GDP and median income
 ```{r}
 data_income <- 
   data_all %>% 
