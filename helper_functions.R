@@ -13,7 +13,7 @@ fit_models <- function(model_func, outcome_vars, rhs_formula, data, ...) {
 
 p_sobel <- function(a, s_a, b, s_b){
   z = (a*b)/(sqrt(b^2 * s_a^2 + a^2 * s_b^2))
-  return (1- pnorm(z))*2
+  return (1- pnorm(abs(z)))*2
 }
 
 sobel_test <- function(Hypothesis, model_med, vcov_med, model_out, vcov_out, predictor, mediator, Predictor, Mediator, stars=FALSE, method, decimal_places = 3, model_orig, vcov_orig){
