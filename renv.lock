@@ -6608,7 +6608,7 @@
     },
     "terra": {
       "Package": "terra",
-      "Version": "1.8-50",
+      "Version": "1.8-60",
       "Source": "Repository",
       "Type": "Package",
       "Title": "Spatial Data Analysis",
