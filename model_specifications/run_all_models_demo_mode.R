@@ -15,7 +15,7 @@ top_dir <- normalizePath(".")
 
 # Filter out any scripts that are directly in the top-level folder
 subfolder_scripts <- Filter(function(path) {
-  dirname(normalizePath(path)) != top_dir
+  normalizePath(dirname(normalizePath(path))) != top_dir
 }, all_scripts)
 
 # Run each script with working directory set to the script's folder
