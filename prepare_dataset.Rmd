@@ -282,7 +282,7 @@ data_Gallup <-
   # build mean indices for multi-item measures
   mutate(positive_affect = rowMeans(pick(smile, enjoyment), na.rm=TRUE),
        absence_negative_affect = rowMeans(pick(no_worry, no_sadness, no_stress, no_anger), na.rm=TRUE),
-       security = rowMeans(pick(nothing_stolen, not_assaulted, safe_walking_alone), na.rm=TRUE), # TODO: decide how to deal with missing values!
+       security = rowMeans(pick(nothing_stolen, not_assaulted, safe_walking_alone), na.rm=TRUE), 
        security_obj = rowMeans(pick(nothing_stolen, not_assaulted), na.rm=TRUE),
        altruistic_behaviour = rowMeans(pick(donated_money, volunteered, helped_stranger), na.rm=TRUE),
        confidence_institutions = rowMeans(pick(confidence_military, confidence_courts, confidence_finance, confidence_government), na.rm=TRUE),
@@ -347,7 +347,7 @@ data_all <-
   right_join(data_Gallup, by = join_by("country_code", year)) %>% 
   unite("country_year", c(country_name, year), remove = FALSE) %>% 
   # log-transformation of income and GDP; build age squared
-  mutate(personal_income = log(personal_income), #TODO: determine good shift values in case we decide to include zero income values
+  mutate(personal_income = log(personal_income), 
          gdp = log(gdp),
          age_squared = age^2) %>% 
   dplyr::select(id,
