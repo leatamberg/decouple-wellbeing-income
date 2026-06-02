@@ -330,6 +330,17 @@ summary(model_H1k_n)
 
 
 ## Stargazer tables
+
+Country coverage
+
+```{r}
+data_H1k_n_countries <- model_H1k_n@frame %>% distinct(country_name, year) %>% mutate(covered = "X") %>% pivot_wider(names_from = year, values_from = covered, values_fill = "") %>% arrange(country_name) %>% mutate(country_name = as.character(country_name))
+
+stargazer(data_H1k_n_countries, summary = FALSE, rownames = FALSE)
+```
+
+
+
 Main analysis models
 
 ```{r}
@@ -341,9 +352,9 @@ stargazer(model_B2_data_H1k_n_lme4, model_H1c_f_data_H1k_n_lme4, model_H1k_n_lme
           #type = "text", 
           report = 'vc*', 
           omit = c("year*"),
-          coef = list(coef_model_B2_data_H1k_n, coef_model_H1c_f_data_H1k_n),
-          p = list(p_values_model_B2_data_H1k_n, p_values_model_H1c_f_data_H1k_n),
-          se = list(sqrt(diag(vcov_B2_data_H1k_n)), sqrt(diag(vcov_H1c_f_data_H1k_n))), 
+          coef = list(coef_model_B2_data_H1k_n, coef_model_H1c_f_data_H1k_n, coef_model_H1k_n),
+          p = list(p_values_model_B2_data_H1k_n, p_values_model_H1c_f_data_H1k_n, p_values_model_H1k_n),
+          se = list(sqrt(diag(vcov_B2_data_H1k_n)), sqrt(diag(vcov_H1c_f_data_H1k_n)), sqrt(diag(vcov_H1k_n))), 
           intercept.bottom = FALSE, 
           column.labels = c("Model 1", "Model 2", "Model 3"),
           #model.numbers = FALSE,
@@ -362,7 +373,7 @@ stargazer(model_B2_data_H1k_n_lme4, model_H1c_f_data_H1k_n_lme4, model_H1k_n_lme
                     "country_average_social_support", "country_average_respect", "country_average_education",
                     "country_average_interesting_activity", "country_average_recreation", "country_average_occupation",
                     "country_average_freedom", "government_effectiveness", "democracy", "social_protection", "personal_income", "relative_income", "gdp", "growth") , "$"),
-          covariate.labels = c("Intercept", "Male", "Age", "Age (squared)", "Partnered", "Separated", "Widowed", "Food", "Housing", "Health", "Water", "Air", "Healthcare", "Security", "Social support", "Respect", "Education", "Interesting activity", "Recreation", "Occupation", "Freedom", "Food (country average)", "Housing (country average)", "Health (country average)", "Water (country average)", "Air (country average)", "Healthcare (country average)", "Security (country average)", "Social support (country average)", "Respect (country average)", "Education (country average)", "Interesting activity (country average)", "Recreation (country average)", "Occupation (country average)", "Freedom (country average)",  "Government effectiveness", "Democracy", "Social protection", "Log(personal income)", "Relative income", "Log(GDP)", "GDP growth"),
+          covariate.labels = c("Intercept", "Male", "Age", "Age (squared)", "Partnered", "Separated", "Widowed", "Food", "Housing", "Health", "Water", "Air", "Healthcare", "Security", "Social support", "Respect", "Education", "Interesting activity", "Recreation", "Occupation", "Freedom", "Food (country average)", "Housing (country average)", "Health (country average)", "Water (country average)", "Air (country average)", "Healthcare (country average)", "Security (country average)", "Social support (country average)", "Respect (country average)", "Education (country average)", "Interesting activity (country average)", "Recreation (country average)", "Occupation (country average)", "Freedom (country average)",  "Government effectiveness", "Democracy", "Social protection", "Log(personal income)", "Relative income", "Log(GDP per capita)", "GDP per capita growth"),
           keep.stat = c("n", "ser"),
           add.lines = list(c("Residual standard deviation",
                              signif(sigma(model_B2_data_H1k_n),4),
@@ -1045,6 +1056,270 @@ ggsave(file = "figures/effect_plot_gdp_median.pdf", width = 180, height = 130, u
 
 
 
+### confidence bands
+
+```{r}
+new_data <- model_B2_data_H1k_n@frame %>% head(1) %>%  select(!c(life_evaluation, country_name, country_year)) %>% 
+  rbind(list(year="2011",
+  gdp = 7,
+                      personal_income = 0.8477599*7,
+                      age = 50,
+                      age_squared = 50^2,
+                      gender = "female",
+                      relationship_status = "partnered",
+                      growth = 0,
+                      relative_income = 50
+                     # food = 1, housing = 1, health = 1, water = 1, air = 1,
+                     #             healthcare = 1, security = 1, social_support = 1, respect = 1,
+                     #             education = 1, interesting_activity = 1, recreation = 1,
+                     #             occupation = 1, freedom = 1,
+                     #  country_average_food = 100,
+                     #  country_average_housing = 100,
+                     #  country_average_health = 85,
+                     #  country_average_water = 100,
+                     #  country_average_air = 100,
+                     #  country_average_healthcare = 97,
+                     #  country_average_security = 98,
+                     #  country_average_social_support = 99,
+                     #  country_average_respect = 99,
+                     #  country_average_education = 99,
+                     #  country_average_interesting_activity = 85,
+                     #  country_average_recreation = 95,
+                     #  country_average_occupation = 99,
+                     #  country_average_freedom = 99,
+                     #  democracy = max(data_all$democracy, na.rm = TRUE),
+                     #  social_protection = max(data_all$social_protection, na.rm = TRUE),
+                     #  government_effectiveness = max(data_all$government_effectiveness, na.rm = TRUE)
+  )) 
+
+X <- model.matrix(~year + gender + age + age_squared + relationship_status + personal_income + 
+    relative_income + gdp + growth, data = new_data)
+
+View(X)
+```
+
+
+
+```{r}
+effect_confidence_function <- function(model, age, gender, relationship_status, log_x = TRUE){
+  
+   effect <- function(x){
+     
+    if(log_x) x= log(x)
+    
+    new_data <-  
+      model@frame %>% 
+      head(1) %>% 
+      select(!c(life_evaluation, country_name, country_year))
+    
+    new_data <- 
+      new_data %>% 
+      rbind(
+        if(any(startsWith(colnames(new_data), "country_average"))){
+          list(year="2011",
+                gdp = x,
+                personal_income = 0.8477599*x,
+                age = age,
+                age_squared = age^2,
+                gender = gender,
+                relationship_status = relationship_status,
+                growth = 0,
+                relative_income = 50,
+                food = 1, housing = 1, health = 1, water = 1, air = 1,
+                           healthcare = 1, security = 1, social_support = 1, respect = 1,
+                           education = 1, interesting_activity = 1, recreation = 1,
+                           occupation = 1, freedom = 1,
+                country_average_food = 100,
+                country_average_housing = 100,
+                country_average_health = 85,
+                country_average_water = 100,
+                country_average_air = 100,
+                country_average_healthcare = 97,
+                country_average_security = 98,
+                country_average_social_support = 99,
+                country_average_respect = 99,
+                country_average_education = 99,
+                country_average_interesting_activity = 85,
+                country_average_recreation = 95,
+                country_average_occupation = 99,
+                country_average_freedom = 99,
+                democracy = max(data_all$democracy, na.rm = TRUE),
+                social_protection = max(data_all$social_protection, na.rm = TRUE),
+                government_effectiveness = max(data_all$government_effectiveness, na.rm = TRUE))} else {
+          if(any(startsWith(colnames(new_data), "food"))){
+            list(year="2011",
+                gdp = x,
+                personal_income = 0.8477599*x,
+                age = age,
+                age_squared = age^2,
+                gender = gender,
+                relationship_status = relationship_status,
+                growth = 0,
+                relative_income = 50,
+                food = 1, housing = 1, health = 1, water = 1, air = 1,
+                           healthcare = 1, security = 1, social_support = 1, respect = 1,
+                           education = 1, interesting_activity = 1, recreation = 1,
+                           occupation = 1, freedom = 1)} else {
+            list(year="2011",
+                gdp = x,
+                personal_income = 0.8477599*x,
+                age = age,
+                age_squared = age^2,
+                gender = gender,
+                relationship_status = relationship_status,
+                growth = 0,
+                relative_income = 50)
+                           } 
+                }
+        ) %>%  
+          tail(1)
+    
+    #print(new_data)
+    
+  X <- model.matrix(colnames(new_data) %>% reformulate(), data = new_data)
+    
+   
+  beta_hat <- fixef(model)
+  V_beta <- as.matrix(vcov(model))
+ 
+  for(year in 2010:2022){
+  X[1,paste0("year", year)] <- 1/14
+  }
+
+  se <- sqrt(X %*% V_beta %*% t(X))
+
+
+  mean <-  beta_hat %*% t(X)
+  CI_low <-  mean - qnorm(1-0.05/2) * se
+  CI_high <- mean + qnorm(1-0.05/2) * se
+  
+  return(data.frame(mean=c(mean),CI_low = c(CI_low), CI_high = c(CI_high)))
+   }
+  return(effect)
+}
+```
+
+
+
+```{r}
+data_effect_confidence_plot <-
+  data.frame(gdp = seq(500,119500,1000)) %>%
+  rowwise() %>% 
+  mutate(B2_min = effect_confidence_function(
+      model_B2_data_H1k_n, age = 50, #mean(data_all$age, na.rm=TRUE),
+      gender = "male",
+      relationship_status = "widowed"
+      )(gdp),
+      B2_max = effect_confidence_function(
+      model_B2_data_H1k_n, age = 90, #mean(data_all$age, na.rm=TRUE),
+      gender = "female",
+      relationship_status = "partnered"
+      )(gdp),
+      H1c_f_min = effect_confidence_function(
+      model_H1c_f_data_H1k_n, age = 50, #mean(data_all$age, na.rm=TRUE),
+      gender = "male",
+      relationship_status = "widowed"
+        )(gdp),
+      H1c_f_max =  effect_confidence_function(
+      model_H1c_f_data_H1k_n, age = 90, #mean(data_all$age, na.rm=TRUE),
+      gender = "female",
+      relationship_status = "partnered"
+      )(gdp),
+      H1k_n_min =  effect_confidence_function(
+      model_H1k_n, age = 50, #mean(data_all$age, na.rm=TRUE),
+      gender = "male",
+      relationship_status = "widowed"
+      )(gdp),
+      H1k_n_max = effect_confidence_function(
+      model_H1k_n, age = 90, #mean(data_all$age, na.rm=TRUE),
+      gender = "female",
+      relationship_status = "partnered"
+      )(gdp))
+
+effect_confidence_plot <- 
+  data_effect_confidence_plot %>% 
+  ggplot(mapping = aes(x=gdp)) +
+  geom_line(aes(y = B2_min$mean, col = "B2", linetype = "worst")) +
+  geom_line(aes(y = B2_max$mean, col = "B2", linetype = "best")) +
+  geom_ribbon(
+    aes(
+      ymin = B2_min$CI_low,
+      ymax = B2_min$CI_high),
+    fill = "#4DBBD5FF", alpha = 0.3)+
+  geom_ribbon(
+    aes(
+      ymin = B2_max$CI_low,
+      ymax = B2_max$CI_high),
+    fill = "#4DBBD5FF", alpha = 0.3) +
+  geom_line(aes(y = H1c_f_min$mean, col = "H1c_f", linetype = "worst")) +
+  geom_line(aes(y = H1c_f_max$mean, col = "H1c_f", linetype = "best")) +
+  geom_ribbon(
+    aes(
+      ymin = H1c_f_min$CI_low,
+      ymax = H1c_f_min$CI_high),
+    fill = "#F39B7FFF", alpha = 0.3) +
+  geom_ribbon(
+    aes(
+      ymin = H1c_f_max$CI_low,
+      ymax = H1c_f_max$CI_high),
+    fill = "#F39B7FFF", alpha = 0.3) +
+  geom_line(aes(y = H1k_n_min$mean, col = "H1k_n", linetype = "worst")) +
+  geom_line(aes(y = H1k_n_max$mean, col = "H1k_n", linetype = "best")) +
+  geom_ribbon(
+    aes(
+      ymin = H1k_n_min$CI_low,
+      ymax = H1k_n_min$CI_high),
+    fill = "#DC0000FF", alpha = 0.3) +
+  geom_ribbon(
+    aes(
+      ymin = H1k_n_max$CI_low,
+      ymax = H1k_n_max$CI_high),
+    fill = "#DC0000FF", alpha = 0.3) +
+  geom_rug(aes(x = jitter(exp(gdp))), data = data_subsample %>% filter(year==2022), linewidth = 0.1) +
+  geom_rug(aes(x = jitter(exp(gdp))), data = data_subsample %>% filter(year==2022), linewidth = 0.1, color = "grey", sides = "t") +
+  scale_colour_manual(name = NULL,
+                        values = c("#4DBBD5FF", "#F39B7FFF", "#DC0000FF"),
+                        breaks = c("B2", 
+                                   "H1c_f", 
+                                   "H1k_n"),
+                        labels = c("Setting 1:\nneed satisfaction follows\ncurrent patterns", 
+                                   "Setting 2:\nindividual needs satisfied", 
+                                   "Setting 3:\nindividual needs satisfied +\nhigh average need satisfaction +\nhigh governance quality")) +
+  #scale_color_jco() +
+  scale_linetype_manual(name = NULL,
+                        values = c("best" = "solid", "worst" = "dashed"),
+                        labels = c("Best demographic profile", "Worst demographic profile")) +
+  guides(linetype = guide_legend(order = 2),col = guide_legend(order = 1)) +
+  xlab("GDP ($ per capita)") +
+  ylab("Life evaluation (0-10 Cantril Ladder)")   +
+  scale_x_continuous(label=comma, 
+                     limits = c(0,120000),
+                     breaks = seq(0,120000, by = 20000),
+                     expand = expansion(mult=c(0.0005, 0.0005)) ,
+                     sec.axis = sec_axis(~ . ^ 0.8477599, 
+                                         name = "Personal income ($ per year, derived median level)", 
+                                         breaks = seq(0,20000, by = 5000),
+                                         labels = label_comma())) +
+  scale_y_continuous(limits = c(0,10), n.breaks =11, expand = expansion(mult=c(0.0005, 0.0005))) +
+  theme_light() +
+  theme(legend.position = c(0.82, 0.26),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(color = "#999999"), #element_rect(fill = "white", color = "#666666"), 
+        legend.spacing.y = unit(0,"cm"),
+        legend.key.width = unit(1, 'cm'),
+        text = element_text(size=9, family="Computer Modern Sans"),
+        plot.margin = margin(l = 5, t = 5, b = 5, r = 15),
+        axis.text.x.top = element_text(color = "#888888"),
+        axis.title.x.top = element_text(color = "#888888"),
+        #axis.line.x.top = element_line(color = "grey"),
+        axis.ticks.x.top = element_line(color = "#888888"),)
+
+
+
+
+ggsave(file = "figures/effect_plot_gdp_median_confidence.pdf", width = 180, height = 130, units = "mm", device=cairo_pdf)
+  
+```
 
 
 
@@ -2014,7 +2289,136 @@ ggarrange(plotlist = lapply(as.list(paste0("country_average_", c(
 ncol = 2)
 ```
 
+# Exp Inequality
 
+## B2
+```{r}
+model_Exp_gini_B2 <- readRDS("./model_specifications/Exp_gini_B2/model.rds")
+
+vcov_Exp_gini_B2 <- readRDS("./model_specifications/Exp_gini_B2/vcov.rds")
+
+model_Exp_gini_B2@vcov_beta <- as.matrix(vcov_Exp_gini_B2) #replace vcov by cluster robust version
+
+
+```
+
+```{r}
+summary(model_Exp_gini_B2)
+```
+
+```{r}
+p_values_model_Exp_gini_B2 <- summary(model_Exp_gini_B2, ddf="Satterthwaite")$coefficients[,"Pr(>|t|)"]
+coef_model_Exp_gini_B2 <- summary(model_Exp_gini_B2, ddf="Satterthwaite")$coefficients[,"Estimate"]
+```
+
+## H1c-f
+```{r}
+model_Exp_gini_H1c_f <- readRDS("./model_specifications/Exp_gini_H1c_f/model.rds")
+
+vcov_Exp_gini_H1c_f <- readRDS("./model_specifications/Exp_gini_H1c_f/vcov.rds")
+
+model_Exp_gini_H1c_f@vcov_beta <- as.matrix(vcov_Exp_gini_H1c_f) #replace vcov by cluster robust version
+
+
+```
+
+```{r}
+summary(model_Exp_gini_H1c_f)
+```
+
+```{r}
+p_values_model_Exp_gini_H1c_f <- summary(model_Exp_gini_H1c_f, ddf="Satterthwaite")$coefficients[,"Pr(>|t|)"]
+coef_model_Exp_gini_H1c_f <- summary(model_Exp_gini_H1c_f, ddf="Satterthwaite")$coefficients[,"Estimate"]
+```
+
+
+
+
+
+## H1g-j
+```{r}
+model_Exp_gini_H1g_j <- readRDS("./model_specifications/Exp_gini_H1g_j/model.rds")
+
+vcov_Exp_gini_H1g_j <- readRDS("./model_specifications/Exp_gini_H1g_j/vcov.rds")
+
+model_Exp_gini_H1g_j@vcov_beta <- as.matrix(vcov_Exp_gini_H1g_j) #replace vcov by cluster robust version
+
+
+```
+
+```{r}
+summary(model_Exp_gini_H1g_j)
+```
+
+## H1k-n
+```{r}
+model_Exp_gini_H1k_n <- readRDS("./model_specifications/Exp_gini_H1k_n/model.rds")
+
+vcov_Exp_gini_H1k_n <- readRDS("./model_specifications/Exp_gini_H1k_n/vcov.rds")
+
+model_Exp_gini_H1k_n@vcov_beta <- as.matrix(vcov_Exp_gini_H1k_n) #replace vcov by cluster robust version
+
+
+```
+
+```{r}
+summary(model_Exp_gini_H1k_n)
+```
+```{r}
+p_values_model_Exp_gini_H1k_n <- summary(model_Exp_gini_H1k_n, ddf="Satterthwaite")$coefficients[,"Pr(>|t|)"]
+coef_model_Exp_gini_H1k_n <- summary(model_Exp_gini_H1k_n, ddf="Satterthwaite")$coefficients[,"Estimate"]
+```
+### Stargazer
+
+```{r}
+model_Exp_gini_B2_lme4 <- as.lmerMod.lmerModLmerTest(model_Exp_gini_B2)
+model_Exp_gini_H1c_f_lme4 <- as.lmerMod.lmerModLmerTest(model_Exp_gini_H1c_f)
+model_Exp_gini_H1k_n_lme4 <- as.lmerMod.lmerModLmerTest(model_Exp_gini_H1k_n)
+stargazer(model_Exp_gini_B2_lme4, model_Exp_gini_H1c_f_lme4, model_Exp_gini_H1k_n_lme4, 
+          #type = "text", 
+          report = 'vc*', 
+          omit = c("year*"),
+          coef = list(coef_model_Exp_gini_B2, coef_model_Exp_gini_H1c_f, coef_model_Exp_gini_H1k_n),
+          p = list(p_values_model_Exp_gini_B2, p_values_model_Exp_gini_H1c_f, p_values_model_Exp_gini_H1k_n),
+          se = list(sqrt(diag(vcov_Exp_gini_B2)), sqrt(diag(vcov_Exp_gini_H1c_f)), sqrt(diag(vcov_Exp_gini_H1k_n))), 
+          intercept.bottom = FALSE, 
+          align = TRUE, 
+          dep.var.caption = "",
+          dep.var.labels.include = FALSE,
+          no.space = TRUE,
+          title = "Multilevel model coefficients when including the Gini coefficient",
+          dep.var.labels = "Positive affect",
+          order = paste0("^", c("Constant", "gendermale", "age", "age_squared", "relationship_statuspartnered", "relationship_statusseparated",
+                    "relationship_statuswidowed", "food1", "housing1", "health1", "water1", "air1",
+                    "healthcare1", "security1", "social_support1", "respect1", "education1",
+                    "interesting_activity1", "recreation1", "occupation1", "freedom1",
+ "country_average_food", "country_average_housing", "country_average_health", 'country_average_water', 
+                     "country_average_air", "country_average_healthcare", "country_average_security",
+                    "country_average_social_support", "country_average_respect", "country_average_education",
+                    "country_average_interesting_activity", "country_average_recreation", "country_average_occupation",
+                    "country_average_freedom", "government_effectiveness", "democracy", "social_protection", "personal_income", "relative_income", "gdp", "growth", "gini") , "$"),
+          covariate.labels = c("Intercept", "Male", "Age", "Age (squared)", "Partnered", "Separated", "Widowed", "Food", "Housing", "Health", "Water", "Air", "Healthcare", "Security", "Social support", "Respect", "Education", "Interesting activity", "Recreation", "Occupation", "Freedom", "Food (country average)", "Housing (country average)", "Health (country average)", "Water (country average)", "Air (country average)", "Healthcare (country average)", "Security (country average)", "Social support (country average)", "Respect (country average)", "Education (country average)", "Interesting activity (country average)", "Recreation (country average)", "Occupation (country average)", "Freedom (country average)",  "Government effectiveness", "Democracy", "Social protection", "Log(personal income)", "Relative income", "Log(GDP per capita)", "GDP per capita growth", "Gini coefficient"),
+          keep.stat = c("n", "ser"),
+          add.lines = list(c("Residual standard deviation", 
+                             signif(sigma(model_Exp_gini_B2),4),
+                             signif(sigma(model_Exp_gini_H1c_f),4),
+                             signif(sigma(model_Exp_gini_H1k_n),4)),
+                           c("Marginal Pseudo-$R^2$", 
+                              signif(MuMIn::r.squaredGLMM(model_Exp_gini_B2)[[1,"R2m"]],4),
+                              signif(MuMIn::r.squaredGLMM(model_Exp_gini_H1c_f)[[1,"R2m"]],4),
+                             signif(MuMIn::r.squaredGLMM(model_Exp_gini_H1k_n)[[1,"R2m"]],4)),
+                            c("Conditional Pseudo-$R^2$", 
+                              signif(MuMIn::r.squaredGLMM(model_Exp_gini_B2)[[1,"R2c"]],4),
+                              signif(MuMIn::r.squaredGLMM(model_Exp_gini_H1c_f)[[1,"R2c"]],4),
+                              signif(MuMIn::r.squaredGLMM(model_Exp_gini_H1k_n)[[1,"R2c"]],4))),
+          star.char = c("+","*","**","***"),
+          star.cutoffs =c(0.1, 0.05, 0.01, 0.001), 
+          notes = c("$+$ p$<$0.1; $^*$ p$<$0.05; $^{**}$ p$<$0.01; $^{***}$ p$<$0.001"),
+          notes.append = F,
+          label = "tab:Exp_gini_B2_Hc_f")
+
+
+```
 
 
 
